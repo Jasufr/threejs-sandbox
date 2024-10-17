@@ -15,6 +15,36 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 /**
+ * Loader
+ */
+const loadingBarElement = document.querySelector('.loading-bar')
+
+const loadingManager = new THREE.LoadingManager(
+  // Loaded
+  () => {
+    gsap.delayedCall(0.5, () => {
+      gsap.to(overlayMaterial.uniforms.uAlpha, { duration: 3, value: 0 })
+      loadingBarElement.classList.add('ended')
+      loadingBarElement.style.transform = ''
+    })
+    // window.setTimeout(() => {
+    //   gsap.to(overlayMaterial.uniforms.uAlpha, { duration: 3, value: 0 })
+    //   loadingBarElement.classList.add('ended')
+    //   loadingBarElement.style.transform = ''
+    // }, 500)
+  },
+  // Progress
+  (itemUrl, itemsLoaded, itemsTotal) => {
+    const progressRatio = itemsLoaded / itemsTotal
+    loadingBarElement.style.transform = `scaleX(${progressRatio})`
+  }
+  // // Error
+  // () => {
+
+  // }
+)
+
+/**
  * Textures
  */
 const textureLoader = new THREE.TextureLoader()
