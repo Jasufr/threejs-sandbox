@@ -45,34 +45,58 @@ bakedTexture.colorSpace = THREE.SRGBColorSpace
 const bakedMaterial = new THREE.MeshBasicMaterial({ map: bakedTexture })
 
 /**
- * Model
+ * Model Baked Scene
  */
+// gltfLoader.load(
+//   'slimeFight.glb',
+//   (gltf) => {
+//     gltf.scene.traverse((child) => {
+//         child.material = bakedMaterial
+//     })
+//     scene.add(gltf.scene)
+//   }
+// )
+
+
+/**
+ * Animated Slime
+ */
+let mixer = null
+// let currentAction = null
+
 gltfLoader.load(
-  'slimeFight.glb',
-  (gltf) => {
-    gltf.scene.traverse((child) => {
-        child.material = bakedMaterial
-    })
-    scene.add(gltf.scene)
-  }
-)
+    'slimeAnimated.glb',
+    (gltf) => {
+      mixer = new THREE.AnimationMixer(gltf.scene)
+
+			// const animation0 = mixer.clipAction(gltf.animations[0])
+			// const animation1 = mixer.clipAction(gltf.animations[1])
+			
+    	const action = mixer.clipAction(gltf.animations[0])
+			action.play()
+			
+			gltf.scene.scale.set(0.5, 0.5, 0.5)
+      scene.add(gltf.scene)
+			
+    }
+  )
 
 /**
  * Lights
  */
-// const ambientLight = new THREE.AmbientLight(0xffffff, 2.4)
-// scene.add(ambientLight)
+const ambientLight = new THREE.AmbientLight(0xffffff, 2.4)
+scene.add(ambientLight)
 
-// const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8)
-// directionalLight.castShadow = true
-// directionalLight.shadow.mapSize.set(1024, 1024)
-// directionalLight.shadow.camera.far = 15
-// directionalLight.shadow.camera.left = - 7
-// directionalLight.shadow.camera.top = 7
-// directionalLight.shadow.camera.right = 7
-// directionalLight.shadow.camera.bottom = - 7
-// directionalLight.position.set(5, 5, 5)
-// scene.add(directionalLight)
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8)
+directionalLight.castShadow = true
+directionalLight.shadow.mapSize.set(1024, 1024)
+directionalLight.shadow.camera.far = 15
+directionalLight.shadow.camera.left = - 7
+directionalLight.shadow.camera.top = 7
+directionalLight.shadow.camera.right = 7
+directionalLight.shadow.camera.bottom = - 7
+directionalLight.position.set(5, 5, 5)
+scene.add(directionalLight)
 
 /**
  * Sizes
@@ -125,10 +149,18 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  * Animate
  */
 const clock = new THREE.Clock()
+let previousTime = 0
 
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
+		const deltaTime = elapsedTime - previousTime
+		previousTime = elapsedTime
+
+		// Update mixer
+		if (mixer !== null) {
+			mixer.update(deltaTime)
+		}
 
     // Update controls
     controls.update()
