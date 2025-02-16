@@ -62,24 +62,84 @@ const bakedMaterial = new THREE.MeshBasicMaterial({ map: bakedTexture })
  * Animated Slime
  */
 let mixer = null
-// let currentAction = null
+let idleAnimation = null
+let jumpAnimation = null
+let attackAnimation = null
+let isPlaying = false
 
 gltfLoader.load(
     'slimeAnimated.glb',
     (gltf) => {
       mixer = new THREE.AnimationMixer(gltf.scene)
 
-			// const animation0 = mixer.clipAction(gltf.animations[0])
-			// const animation1 = mixer.clipAction(gltf.animations[1])
-			
-    	const action = mixer.clipAction(gltf.animations[0])
-			action.play()
+			idleAnimation = mixer.clipAction(gltf.animations[1]);
+			jumpAnimation = mixer.clipAction(gltf.animations[2]);
+			attackAnimation = mixer.clipAction(gltf.animations[0]);
+
+			jumpAnimation.clampWhenFinished = true;
+			jumpAnimation.loop = THREE.LoopOnce;
+			attackAnimation.clampWhenFinished = true;
+			attackAnimation.loop = THREE.LoopOnce;
+			attackAnimation.timeScale = 1.5
+
+			idleAnimation.play();
+			console.log(gltf.animations)
 			
 			gltf.scene.scale.set(0.5, 0.5, 0.5)
       scene.add(gltf.scene)
 			
     }
   )
+
+	function playJump() {
+    if (!jumpAnimation || !idleAnimation || isPlaying) return;
+
+    isPlaying = true;
+    idleAnimation.stop(); 
+    jumpAnimation.reset().play();
+
+    jumpAnimation.getMixer().addEventListener('finished', (e) => {
+			if (e.action === jumpAnimation) {
+					isPlaying = false;
+					idleAnimation.reset().fadeIn(0.2).play(); // Smoothly return to idle
+			}
+	});
+}
+
+	function playAttack() {
+    if (!attackAnimation || !idleAnimation || isPlaying) return;
+
+    isPlaying = true;
+    idleAnimation.stop(); 
+    attackAnimation.reset().play();
+
+    attackAnimation.getMixer().addEventListener('finished', (e) => {
+			if (e.action === attackAnimation) {
+					isPlaying = false;
+					idleAnimation.reset().fadeIn(0.2).play(); // Smoothly return to idle
+			}
+	});
+}
+
+// GUI Button
+const animationFolder = gui.addFolder('Animations');
+animationFolder.add({ playJump }, 'playJump').name('Jump');
+animationFolder.add({ playAttack }, 'playAttack').name('Attack');
+
+/**
+ * Floor
+ */
+const floor = new THREE.Mesh(
+	new THREE.PlaneGeometry(10, 10),
+	new THREE.MeshStandardMaterial({
+			color: '#4F7942',
+			metalness: 0,
+			roughness: 0.5
+	})
+)
+floor.receiveShadow = true
+floor.rotation.x = - Math.PI * 0.5
+scene.add(floor)
 
 /**
  * Lights
