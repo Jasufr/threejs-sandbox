@@ -80,7 +80,8 @@ gltfLoader.load(
 			jumpAnimation.loop = THREE.LoopOnce;
 			attackAnimation.clampWhenFinished = true;
 			attackAnimation.loop = THREE.LoopOnce;
-			attackAnimation.timeScale = 1.5
+			// attackAnimation.timeScale = 1.5
+			// attackAnimation.timeScale = .5
 
 			idleAnimation.play();
 			console.log(gltf.animations)
@@ -95,30 +96,54 @@ gltfLoader.load(
     if (!jumpAnimation || !idleAnimation || isPlaying) return;
 
     isPlaying = true;
-    idleAnimation.stop(); 
-    jumpAnimation.reset().play();
+    // idleAnimation.stop(); 
+    // jumpAnimation.reset().play();
+
+    // idleAnimation.crossFadeTo(jumpAnimation, 0.2, true);
+    // jumpAnimation.reset().play();
+
+    idleAnimation.fadeOut(0.2)
+    jumpAnimation.reset().fadeIn(0.2).play()
 
     jumpAnimation.getMixer().addEventListener('finished', (e) => {
 			if (e.action === jumpAnimation) {
 					isPlaying = false;
-					idleAnimation.reset().fadeIn(0.2).play(); // Smoothly return to idle
+					// idleAnimation.reset().fadeIn(0.2).play(); // Smoothly return to idle
+
+          // jumpAnimation.crossFadeTo(idleAnimation, 0.5, true);
+          // idleAnimation.reset().play();
+
+          jumpAnimation.fadeOut(0.2) // Fade out jump
+          idleAnimation.reset().fadeIn(0.2).play() // Fade back to idle
 			}
-	});
+	}, { once: true });
 }
 
 	function playAttack() {
     if (!attackAnimation || !idleAnimation || isPlaying) return;
 
     isPlaying = true;
-    idleAnimation.stop(); 
-    attackAnimation.reset().play();
+    // idleAnimation.stop(); 
+    // attackAnimation.reset().play();
+
+    // idleAnimation.crossFadeTo(attackAnimation, 0.2, true);
+    // attackAnimation.reset().play();
+
+    idleAnimation.fadeOut(0.2)
+    attackAnimation.reset().fadeIn(0.2).play()
 
     attackAnimation.getMixer().addEventListener('finished', (e) => {
 			if (e.action === attackAnimation) {
 					isPlaying = false;
-					idleAnimation.reset().fadeIn(0.2).play(); // Smoothly return to idle
+					// idleAnimation.reset().fadeIn(0.5).play(); // Smoothly return to idle
+
+          // attackAnimation.crossFadeTo(idleAnimation, 0.5, true);
+          // idleAnimation.reset().play();
+
+          attackAnimation.fadeOut(0.2)
+          idleAnimation.reset().fadeIn(1).play()
 			}
-	});
+	}, { once: true });
 }
 
 // GUI Button
