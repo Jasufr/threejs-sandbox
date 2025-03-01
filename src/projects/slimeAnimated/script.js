@@ -40,27 +40,8 @@ bakedTexture.flipY = false
 bakedTexture.colorSpace = THREE.SRGBColorSpace
 
 /**
- * Materials
- */
-const bakedMaterial = new THREE.MeshBasicMaterial({ map: bakedTexture })
-
-/**
- * Model Baked Scene
- */
-// gltfLoader.load(
-//   'slimeFight.glb',
-//   (gltf) => {
-//     gltf.scene.traverse((child) => {
-//         child.material = bakedMaterial
-//     })
-//     scene.add(gltf.scene)
-//   }
-// )
-
-
-/**
  * Animated Slime
- */ 
+ */
 let mixer = null
 let idleAnimation = null
 let jumpAnimation = null
@@ -88,10 +69,10 @@ gltfLoader.load(
 
 			idleAnimation.play();
 			console.log(gltf.animations)
-			
+
 			gltf.scene.scale.set(0.5, 0.5, 0.5)
       scene.add(gltf.scene)
-			
+
     }
   )
 
@@ -99,11 +80,6 @@ gltfLoader.load(
     if (!jumpAnimation || !idleAnimation || isPlaying) return;
 
     isPlaying = true;
-    // idleAnimation.stop(); 
-    // jumpAnimation.reset().play();
-
-    // idleAnimation.crossFadeTo(jumpAnimation, 0.2, true);
-    // jumpAnimation.reset().play();
 
     idleAnimation.fadeOut(0.2)
     jumpAnimation.reset().fadeIn(0.2).play()
@@ -111,13 +87,9 @@ gltfLoader.load(
     jumpAnimation.getMixer().addEventListener('finished', (e) => {
 			if (e.action === jumpAnimation) {
 					isPlaying = false;
-					// idleAnimation.reset().fadeIn(0.2).play(); // Smoothly return to idle
 
-          // jumpAnimation.crossFadeTo(idleAnimation, 0.5, true);
-          // idleAnimation.reset().play();
-
-          jumpAnimation.fadeOut(0.2) // Fade out jump
-          idleAnimation.reset().fadeIn(0.2).play() // Fade back to idle
+          jumpAnimation.fadeOut(0.2)
+          idleAnimation.reset().fadeIn(0.2).play()
 			}
 	}, { once: true });
 }
@@ -126,11 +98,6 @@ gltfLoader.load(
     if (!attackAnimation || !idleAnimation || isPlaying) return;
 
     isPlaying = true;
-    // idleAnimation.stop(); 
-    // attackAnimation.reset().play();
-
-    // idleAnimation.crossFadeTo(attackAnimation, 0.2, true);
-    // attackAnimation.reset().play();
 
     idleAnimation.fadeOut(0.2)
     attackAnimation.reset().fadeIn(0.2).play()
@@ -138,10 +105,6 @@ gltfLoader.load(
     attackAnimation.getMixer().addEventListener('finished', (e) => {
 			if (e.action === attackAnimation) {
 					isPlaying = false;
-					// idleAnimation.reset().fadeIn(0.5).play(); // Smoothly return to idle
-
-          // attackAnimation.crossFadeTo(idleAnimation, 0.5, true);
-          // idleAnimation.reset().play();
 
           attackAnimation.fadeOut(0.2)
           idleAnimation.reset().fadeIn(1).play()
