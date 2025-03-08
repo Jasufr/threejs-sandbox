@@ -1,4 +1,0 @@
-[[redirects]]
-  from = "/projects/*"
-  to = "/index.html"
-  status = 200
