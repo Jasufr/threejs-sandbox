@@ -35,7 +35,7 @@ gltfLoader.setDRACOLoader(dracoLoader)
 /**
  * Textures
  */
-const bakedTexture = textureLoader.load('/textures/baked.jpg')
+const bakedTexture = textureLoader.load('/threejs-sandbox/textures/baked.jpg')
 bakedTexture.flipY = false
 bakedTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -48,7 +48,7 @@ const bakedMaterial = new THREE.MeshBasicMaterial({ map: bakedTexture })
  * Model Baked Scene
  */
 gltfLoader.load(
-  '/models/slimeFight.glb',
+  '/threejs-sandbox/models/slimeFight.glb',
   (gltf) => {
     gltf.scene.traverse((child) => {
         child.material = bakedMaterial

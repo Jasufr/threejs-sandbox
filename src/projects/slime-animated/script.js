@@ -52,7 +52,7 @@ console.log(gltfLoader);
 
 
 gltfLoader.load(
-    '/models/slimeAnimated.glb',
+    '/threejs-sandbox/models/slimeAnimated.glb',
     (gltf) => {
       mixer = new THREE.AnimationMixer(gltf.scene)
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,14 +15,34 @@
             <h2>Projects</h2>
             <ul>
                 <li>
-                    <a href="/projects/slimeAnimated/index.html">Slime Animation</a>
+                    <a href="/projects/slimeAnimated/">Slime Animation</a>
                 </li>
                 <li>
-                  <a href="/projects/slimeBaked/index.html">Slime Baked</a>
+                  <a href="/projects/slimeBaked/">Slime Baked</a>
               </li>
             </ul>
         </section>
     </main>
     <script type="module" src="/main.js"></script>
 </body>
+</html> -->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    {{> head}}
+  </head>
+  <body>
+    <div id="app">
+      <h1>{{title}}</h1>
+      <ul class="people_list">
+        {{#each sketches}}
+        <li>
+          <a href="/threejs-sandbox/projects/{{this.key}}/">{{this.title}}</a>
+        </li>
+        {{/each}}
+      </ul>
+    </div>
+    <script type="module" src="./index.js"></script>
+  </body>
 </html>
