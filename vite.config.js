@@ -6,7 +6,7 @@ import { pageData } from './src/consts/';
 
 export default defineConfig({
   root: resolve(__dirname, 'src'),
-  base: '/threejs-sandbox/',
+  // base: '/threejs-sandbox/',
   plugins: [
     glsl(),
     handlebars({
