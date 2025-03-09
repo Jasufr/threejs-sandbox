@@ -39,13 +39,21 @@ a:hover {
 .contents {
   position: relative;
   color: #EDEDED;
-  padding: 5rem;
+  padding-inline: 5rem;
+  padding-bottom: 5rem;
   padding-top: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .contents {
+    padding-inline: 2.5rem;
+  }
 }
 
 .top-section {
   height: 100dvh;
   position: relative;
+  text-align: center;
 }
 
 .top-title {
@@ -53,7 +61,7 @@ a:hover {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  text-align: center;
+  text-wrap: nowrap;
 }
 
 .top-info {
@@ -61,10 +69,12 @@ a:hover {
   bottom: 10%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 100%;
 }
 
 .top-description {
   margin-bottom: 1rem;
+  font-size: .85rem;
 }
 
 .top-sns-container {
