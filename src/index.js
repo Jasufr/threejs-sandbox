@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 /**
  * Base
@@ -12,7 +12,7 @@ const scene = new THREE.Scene()
 
 // Object
 const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
+const material = new THREE.MeshBasicMaterial({ color: 0xA8A9AD })
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 
@@ -43,8 +43,8 @@ camera.position.z = 3
 scene.add(camera)
 
 // Controls
-const controls = new OrbitControls(camera, canvas)
-controls.enableDamping = true
+// const controls = new OrbitControls(camera, canvas)
+// controls.enableDamping = true
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
@@ -57,8 +57,6 @@ renderer.setClearColor(0x0A0A0A);
 // Animate
 const clock = new THREE.Clock()
 let scrollPosY = 0
-
-
 window.addEventListener('scroll', () => {
   scrollPosY = (window.scrollY / document.body.clientHeight)
 })
@@ -66,10 +64,12 @@ window.addEventListener('scroll', () => {
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
+
+    // Model rotation on scroll
     mesh.rotation.y = Math.PI * scrollPosY
 
     // Update controls
-    controls.update()
+    // controls.update()
 
     // Render
     renderer.render(scene, camera)
