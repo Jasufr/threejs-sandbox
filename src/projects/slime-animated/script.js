@@ -21,9 +21,6 @@ const scene = new THREE.Scene()
 /**
  * Loaders
  */
-// Texture loader
-const textureLoader = new THREE.TextureLoader()
-
 // Draco loader
 const dracoLoader = new DRACOLoader()
 dracoLoader.setDecoderPath('draco/')
@@ -31,13 +28,6 @@ dracoLoader.setDecoderPath('draco/')
 // GLTF loader
 const gltfLoader = new GLTFLoader()
 gltfLoader.setDRACOLoader(dracoLoader)
-
-/**
- * Textures
- */
-const bakedTexture = textureLoader.load('baked.jpg')
-bakedTexture.flipY = false
-bakedTexture.colorSpace = THREE.SRGBColorSpace
 
 /**
  * Animated Slime
@@ -52,7 +42,6 @@ console.log(gltfLoader);
 
 
 gltfLoader.load(
-    // '/threejs-sandbox/models/slimeAnimated.glb',
     '/models/slimeAnimated.glb',
     (gltf) => {
       mixer = new THREE.AnimationMixer(gltf.scene)
