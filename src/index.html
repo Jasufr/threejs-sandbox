@@ -5,14 +5,31 @@
   </head>
   <body>
     <div id="app">
-      <h1>{{title}}</h1>
-      <ul class="people_list">
-        {{#each sketches}}
-        <li>
-          <a href="/projects/{{this.key}}/">{{this.title}}</a>
-        </li>
-        {{/each}}
-      </ul>
+      <canvas class="webgl"></canvas>
+      <div class="contents">
+
+        <div class="top-section">
+          <h1>{{title}}</h1>
+
+        </div>
+        <div class="project-section">
+          <div class="project-grid">
+            {{#each sketches}}
+            <div class="project-div">
+              <a href="/projects/{{this.key}}/">
+                <div class="project-img" style="background-image: url({{this.image}})">
+                  <div class="project-hover">
+                    <p>visit project</p>
+                  </div>
+                </div>
+                <h2 class="project-title">{{this.title}}</h2>
+                <p class="project-date"></p>
+              </a>
+            </div>
+            {{/each}}
+          </div>
+        </div>
+      </div>
     </div>
     <script type="module" src="./index.js"></script>
   </body>

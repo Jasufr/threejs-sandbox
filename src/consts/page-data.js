@@ -7,7 +7,8 @@ export const pageData = [
   {
     key: 'slime-animated',
     path: '/projects/slime-animated/index.html',
-    title : 'Slime Animated',
+    title: 'Slime Animated',
+    image: '/img/slimeAnimatedThumbnail.png',
     description: '',
     updated: '',
   },
@@ -15,6 +16,7 @@ export const pageData = [
     key: 'slime-baked',
     path: '/projects/slime-baked/index.html',
     title : 'Slime Baked',
+    image: '/img/slimeBakedThumbnail.png',
     description: '',
     updated: '',
   },

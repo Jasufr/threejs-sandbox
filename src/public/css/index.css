@@ -7,7 +7,11 @@
 html,
 body
 {
-    overflow: hidden;
+    /* overflow: hidden; */
+}
+
+a {
+  text-decoration: none;
 }
 
 .webgl
@@ -22,4 +26,71 @@ body
 .back-link {
   position: absolute;
   z-index: 10;
+}
+
+.contents {
+  position: relative;
+  color: white;
+  padding: 2rem;
+}
+
+.top-section {
+  height: 100vh;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-items: center;
+  gap: 1rem;
+  padding-inline: 10%;
+}
+
+.project-div {
+  width: 100%;
+}
+
+.project-div a {
+  display: block;
+  color: white;
+}
+
+.project-img {
+  background-color: aliceblue;
+  padding-top: 55%;
+  margin-bottom: .5rem;
+  background-position: center;
+  background-size: cover;
+  position: relative
+}
+
+.project-title {
+  opacity: 1;
+  transition: opacity .3s ease-in-out;
+}
+
+.project-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, .5);
+  opacity: 0;
+  transition: opacity .3s ease-in-out;
+}
+
+.project-hover p {
+  letter-spacing: .15rem;
+}
+
+.project-div:hover .project-hover {
+  opacity: 1;
+}
+
+.project-div:hover .project-title {
+  opacity: .5;
 }
