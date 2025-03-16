@@ -1,4 +1,7 @@
 import * as THREE from 'three'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import holographicVertexShader from './shaders/holographic/vertex.glsl'
+import holographicFragmentShader from './shaders/holographic/fragment.glsl'
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 /**
@@ -10,11 +13,8 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
-// Object
-const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ color: 0xA8A9AD })
-const mesh = new THREE.Mesh(geometry, material)
-scene.add(mesh)
+// Loaders
+const gltfLoader = new GLTFLoader()
 
 // Sizes
 const sizes = {
@@ -47,12 +47,47 @@ scene.add(camera)
 // controls.enableDamping = true
 
 // Renderer
+const rendererParameters = {}
+rendererParameters.clearColor = '#0A0A0A'
+
 const renderer = new THREE.WebGLRenderer({
-    canvas: canvas
+    canvas: canvas,
+    antialias: true
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-renderer.setClearColor(0x0A0A0A);
+renderer.setClearColor(rendererParameters.clearColor)
+
+
+/**
+ * Material
+ */
+const materialParameters = {}
+materialParameters.color = '#A8A9AD'
+
+
+const material = new THREE.ShaderMaterial({
+  vertexShader: holographicVertexShader,
+  fragmentShader: holographicFragmentShader,
+  uniforms: {
+    uTime: new THREE.Uniform(0),
+    uColor: new THREE.Uniform(new THREE.Color(materialParameters.color))
+  },
+  transparent: true,
+  side: THREE.DoubleSide,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending
+})
+
+/**
+ * Object
+ */
+const sphere = new THREE.Mesh(
+  new THREE.SphereGeometry(),
+
+  material,
+)
+scene.add(sphere)
 
 // Animate
 const clock = new THREE.Clock()
@@ -65,8 +100,11 @@ const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
 
+    // Update material
+    material.uniforms.uTime.value = elapsedTime
+
     // Model rotation on scroll
-    mesh.rotation.y = Math.PI * scrollPosY
+    sphere.rotation.y = Math.PI * scrollPosY
 
     // Update controls
     // controls.update()
