@@ -66,7 +66,7 @@ let isClosed = false;
 let isOpened = true;
 const animationControls = {
   playOpen: () => {
-    if (!openAnimationTop || !openAnimationScreen || isOpened) return;
+    if (!openAnimationTop || !openAnimationScreen || isOpened || openAnimationTop.isRunning() || openAnimationScreen.isRunning()) return;
 
     openAnimationTop.reset();
     openAnimationScreen.reset();
@@ -79,7 +79,7 @@ const animationControls = {
     isClosed = false;
   },
   playClose: () => {
-    if (!openAnimationTop || !openAnimationScreen || isClosed) return;
+    if (!openAnimationTop || !openAnimationScreen || isClosed || openAnimationTop.isRunning() || openAnimationScreen.isRunning()) return;
 
     openAnimationTop.time = openAnimationTop.getClip().duration;
     openAnimationScreen.time = openAnimationScreen.getClip().duration;
@@ -105,17 +105,22 @@ const animationControls = {
 const openBtn = document.querySelector(".open-btn");
 const closeBtn = document.querySelector(".close-btn");
 openBtn.onclick = () => {
+  if(!openAnimationTop.isRunning() || !openAnimationScreen.isRunning()) {
   animationControls.playOpen()
-  openBtn.classList.add("active")
-  if(closeBtn.classList.contains("active")) {
-    closeBtn.classList.remove("active")
+    openBtn.classList.add("active")
+    if(closeBtn.classList.contains("active")) {
+      closeBtn.classList.remove("active")
+    }
   }
+
 }
 closeBtn.onclick = () => {
+  if(!openAnimationTop.isRunning() || !openAnimationScreen.isRunning()) {
   animationControls.playClose()
-  closeBtn.classList.add("active")
-  if(openBtn.classList.contains("active")) {
-    openBtn.classList.remove("active")
+    closeBtn.classList.add("active")
+    if(openBtn.classList.contains("active")) {
+      openBtn.classList.remove("active")
+    }
   }
 }
 
