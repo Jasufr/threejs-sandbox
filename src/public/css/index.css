@@ -216,5 +216,117 @@ PROJECT PAGES
 */
 .back-link {
   position: absolute;
+  top: 20px;
+  left: 20px;
   z-index: 10;
+  padding: .75rem 1rem;
+  border: 1px solid #EDEDED;
+  border-radius: 5px;
+  font-size: .8rem;
+  transition: all .3s ease-in-out;
+}
+
+.back-link:hover {
+  border: 1px solid #8F8F8F;
+
+}
+
+/*
+HAMBURGER MENU
+*/
+.hamburger-menu {
+  position: fixed;
+  background-color: #8F8F8F;
+  z-index: 10;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: .5rem;
+  border-radius: 5px;
+  top: 20px;
+  right: 20px;
+  border: none;
+  cursor: pointer;
+  transition: all .3s ease-in-out;
+}
+
+.hamburger-menu:hover {
+  opacity: .5;
+}
+
+.hamburger-menu div {
+  background-color: #E5E4E2;
+  width: 100%;
+  height: .1rem;
+  margin-bottom: .25rem;
+  border-radius: 5px;
+  transition: all .3s ease-in-out;
+
+}
+
+.hamburger-menu div:last-of-type {
+  margin-bottom: unset;
+}
+
+.hamburger-menu.open div:first-of-type {
+  transform: translateY(0.35rem) rotate(45deg);
+
+}
+
+.hamburger-menu.open div:nth-of-type(2) {
+  opacity: 0;
+}
+
+.hamburger-menu.open div:last-of-type {
+  transform: translateY(-0.35rem) rotate(-45deg);
+
+}
+
+.menu {
+  background-color: #E5E4E2;
+  height: 100vh;
+  width: 0;
+  position: fixed;
+  z-index: 9;
+  transition: all .3s ease-in-out;
+  padding-block: 5rem;
+  overflow: hidden;
+  top: 0;
+  right: 0
+}
+
+.menu ul {
+  list-style: none;
+  margin: 3rem;
+}
+
+.menu ul li button {
+  border: none;
+  border-radius: 5px;
+  box-shadow: 1px 1px 3px rgb(143, 143, 143, 1);
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: .75rem 1rem;
+  background-color: #EDEDED;
+  color: #8F8F8F;
+  transition: all .3s ease-in-out;
+}
+
+.menu ul li button:hover {
+  background-color: #8F8F8F;
+  color: #EDEDED;
+}
+
+.menu ul li button.active {
+  background-color: #8F8F8F;
+  color: #EDEDED;
+}
+
+.menu.open {
+  width: 15rem;
+}
+
+@media screen and (max-width: 480px) {
+  .menu.open {
+    width: 100vw;
+  }
 }

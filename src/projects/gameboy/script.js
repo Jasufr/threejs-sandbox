@@ -8,9 +8,9 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
  * Base
  */
 // Debug
-const gui = new GUI({
-    width: 400
-})
+// const gui = new GUI({
+//     width: 200
+// })
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -36,14 +36,14 @@ let mixer = null
 let openAnimationTop = null
 let openAnimationScreen = null
 
-console.log(gltfLoader);
+// console.log(gltfLoader);
 
 
 gltfLoader.load(
     '/models/gameboyWithAnimation.glb',
     (gltf) => {
       mixer = new THREE.AnimationMixer(gltf.scene)
-      console.log(gltf);
+      // console.log(gltf);
       openAnimationTop = mixer.clipAction(gltf.animations[0]);
       openAnimationScreen = mixer.clipAction(gltf.animations[1]);
       openAnimationTop.loop = THREE.LoopOnce;
@@ -97,9 +97,27 @@ const animationControls = {
 };
 
 // GUI Button
-const animationFolder = gui.addFolder('Animations');
-animationFolder.add(animationControls, 'playOpen').name('Open');
-animationFolder.add(animationControls, 'playClose').name('Close');
+// const animationFolder = gui.addFolder('Animations');
+// animationFolder.add(animationControls, 'playOpen').name('Open');
+// animationFolder.add(animationControls, 'playClose').name('Close');
+
+// Menu Buttons
+const openBtn = document.querySelector(".open-btn");
+const closeBtn = document.querySelector(".close-btn");
+openBtn.onclick = () => {
+  animationControls.playOpen()
+  openBtn.classList.add("active")
+  if(closeBtn.classList.contains("active")) {
+    closeBtn.classList.remove("active")
+  }
+}
+closeBtn.onclick = () => {
+  animationControls.playClose()
+  closeBtn.classList.add("active")
+  if(openBtn.classList.contains("active")) {
+    openBtn.classList.remove("active")
+  }
+}
 
 /**
  * Lights
@@ -193,3 +211,16 @@ const tick = () =>
 }
 
 tick()
+
+
+/**
+ * Menu
+ */
+const menuButton = document.querySelector(".hamburger-menu");
+const menu = document.querySelector(".menu");
+if (menuButton) {
+  menuButton.onclick = () => {
+    menu.classList.toggle("open")
+    menuButton.classList.toggle("open")
+  }
+}
