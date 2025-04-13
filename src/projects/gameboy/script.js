@@ -35,6 +35,8 @@ gltfLoader.setDRACOLoader(dracoLoader)
 let mixer = null
 let openAnimationTop = null
 let openAnimationScreen = null
+let onButtonAnimation = null
+let onLEDAnimation = null
 
 // console.log(gltfLoader);
 
@@ -43,13 +45,19 @@ gltfLoader.load(
     '/models/gameboyWithAnimation.glb',
     (gltf) => {
       mixer = new THREE.AnimationMixer(gltf.scene)
-      // console.log(gltf);
+      console.log(gltf);
       openAnimationTop = mixer.clipAction(gltf.animations[0]);
       openAnimationScreen = mixer.clipAction(gltf.animations[1]);
+      // onButtonAnimation = mixer.clipAction(gltf.animations[3]);
+      // onLEDAnimation = mixer.clipAction(gltf.animations[1]);
       openAnimationTop.loop = THREE.LoopOnce;
       openAnimationScreen.loop = THREE.LoopOnce;
+      // onButtonAnimation.loop = THREE.LoopOnce;
+      // onLEDAnimation.loop = THREE.LoopOnce;
       openAnimationTop.clampWhenFinished = true;
       openAnimationScreen.clampWhenFinished = true;
+      // onButtonAnimation.clampWhenFinished = true;
+      // onLEDAnimation.clampWhenFinished = true;
       openAnimationTop.play();
       openAnimationScreen.play();
       gltf.scene.rotateY(-2)
@@ -93,7 +101,24 @@ const animationControls = {
     isClosed = true;
     isOpened = false;
 
-  }
+  },
+  // playOn: () => {
+  //   onButtonAnimation.reset();
+  //   openAnimationScreen.reset();
+  //   onButtonAnimation.timeScale = 1;
+  //   openAnimationScreen.timeScale = 1;
+  //   onButtonAnimation.play();
+  //   openAnimationScreen.play();
+  //   console.log(onButtonAnimation);
+
+  //   onLEDAnimation.reset();
+  //   openAnimationScreen.reset();
+  //   onLEDAnimation.timeScale = 1;
+  //   openAnimationScreen.timeScale = 1;
+  //   onLEDAnimation.play();
+  //   openAnimationScreen.play();
+  //   console.log(onLEDAnimation);
+  // },
 };
 
 // GUI Button
@@ -104,6 +129,7 @@ const animationControls = {
 // Menu Buttons
 const openBtn = document.querySelector(".open-btn");
 const closeBtn = document.querySelector(".close-btn");
+const onBtn = document.querySelector(".on-btn");
 openBtn.onclick = () => {
   if(!openAnimationTop.isRunning() || !openAnimationScreen.isRunning()) {
   animationControls.playOpen()
@@ -122,6 +148,15 @@ closeBtn.onclick = () => {
       openBtn.classList.remove("active")
     }
   }
+}
+onBtn.onclick = () => {
+  // if(!openAnimationTop.isRunning() || !openAnimationScreen.isRunning()) {
+  animationControls.playOn()
+    // onBtn.classList.add("active")
+    // if(openBtn.classList.contains("active")) {
+    //   openBtn.classList.remove("active")
+    // }
+  // }
 }
 
 /**
