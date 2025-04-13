@@ -33,12 +33,18 @@ gltfLoader.setDRACOLoader(dracoLoader)
  * Gameboy
  */
 let mixer = null
-let openAnimationTop = null
-let openAnimationScreen = null
-let onButtonAnimation = null
-let onLEDAnimation = null
 
-// console.log(gltfLoader);
+let openAnimationTop = null
+
+let onButtonAnimation = null
+
+let batteryLight = null
+let batteryLightMaterial = null
+let batteryLightState = false
+let batteryLightTargetIntensity = 0
+let batteryLightDuration = 1
+let batteryLightElapsed = 0
+
 
 
 gltfLoader.load(
@@ -47,19 +53,29 @@ gltfLoader.load(
       mixer = new THREE.AnimationMixer(gltf.scene)
       console.log(gltf);
       openAnimationTop = mixer.clipAction(gltf.animations[0]);
-      openAnimationScreen = mixer.clipAction(gltf.animations[1]);
-      // onButtonAnimation = mixer.clipAction(gltf.animations[3]);
-      // onLEDAnimation = mixer.clipAction(gltf.animations[1]);
+      onButtonAnimation = mixer.clipAction(gltf.animations[1]);
+
       openAnimationTop.loop = THREE.LoopOnce;
-      openAnimationScreen.loop = THREE.LoopOnce;
-      // onButtonAnimation.loop = THREE.LoopOnce;
-      // onLEDAnimation.loop = THREE.LoopOnce;
+      onButtonAnimation.loop = THREE.LoopOnce;
+
       openAnimationTop.clampWhenFinished = true;
-      openAnimationScreen.clampWhenFinished = true;
-      // onButtonAnimation.clampWhenFinished = true;
-      // onLEDAnimation.clampWhenFinished = true;
+      onButtonAnimation.clampWhenFinished = true;
+
       openAnimationTop.play();
-      openAnimationScreen.play();
+
+
+      batteryLight = gltf.scene.getObjectByName("batteryLight");
+      if (batteryLight && batteryLight.isMesh) {
+        const newMaterial = new THREE.MeshStandardMaterial({
+          color: 0x777777,
+          emissive: 0x00ff00,
+          emissiveIntensity: 0,
+        });
+
+        batteryLightMaterial = newMaterial
+        batteryLight.material = batteryLightMaterial
+      }
+
       gltf.scene.rotateY(-2)
       gltf.scene.rotateX(-1)
       gltf.scene.position.y = -0.75
@@ -74,51 +90,51 @@ let isClosed = false;
 let isOpened = true;
 const animationControls = {
   playOpen: () => {
-    if (!openAnimationTop || !openAnimationScreen || isOpened || openAnimationTop.isRunning() || openAnimationScreen.isRunning()) return;
+    if (!openAnimationTop || isOpened || openAnimationTop.isRunning()) return;
 
     openAnimationTop.reset();
-    openAnimationScreen.reset();
     openAnimationTop.timeScale = 1;
-    openAnimationScreen.timeScale = 1;
     openAnimationTop.play();
-    openAnimationScreen.play();
 
     isOpened = true;
     isClosed = false;
   },
   playClose: () => {
-    if (!openAnimationTop || !openAnimationScreen || isClosed || openAnimationTop.isRunning() || openAnimationScreen.isRunning()) return;
+    if (!openAnimationTop  || isClosed || openAnimationTop.isRunning() ) return;
 
     openAnimationTop.time = openAnimationTop.getClip().duration;
-    openAnimationScreen.time = openAnimationScreen.getClip().duration;
     openAnimationTop.timeScale = -1;
-    openAnimationScreen.timeScale = -1;
     openAnimationTop.paused = false;
-    openAnimationScreen.paused = false;
     openAnimationTop.play();
-    openAnimationScreen.play();
 
     isClosed = true;
     isOpened = false;
 
   },
-  // playOn: () => {
-  //   onButtonAnimation.reset();
-  //   openAnimationScreen.reset();
-  //   onButtonAnimation.timeScale = 1;
-  //   openAnimationScreen.timeScale = 1;
-  //   onButtonAnimation.play();
-  //   openAnimationScreen.play();
-  //   console.log(onButtonAnimation);
+  playOn: () => {
+    if (!onButtonAnimation) return;
 
-  //   onLEDAnimation.reset();
-  //   openAnimationScreen.reset();
-  //   onLEDAnimation.timeScale = 1;
-  //   openAnimationScreen.timeScale = 1;
-  //   onLEDAnimation.play();
-  //   openAnimationScreen.play();
-  //   console.log(onLEDAnimation);
-  // },
+  batteryLightElapsed = 0;
+
+  if (!batteryLightState) {
+    // Light is off → turn on
+    onButtonAnimation.reset();
+    onButtonAnimation.timeScale = 10;
+    onButtonAnimation.play();
+
+    batteryLightTargetIntensity = 2;
+    batteryLightState = true;
+  } else {
+    // Light is on → turn off
+    onButtonAnimation.time = onButtonAnimation.getClip().duration;
+    onButtonAnimation.timeScale = -10;
+    onButtonAnimation.paused = false;
+    onButtonAnimation.play();
+
+    batteryLightTargetIntensity = 0;
+    batteryLightState = false;
+  }
+  },
 };
 
 // GUI Button
@@ -131,7 +147,7 @@ const openBtn = document.querySelector(".open-btn");
 const closeBtn = document.querySelector(".close-btn");
 const onBtn = document.querySelector(".on-btn");
 openBtn.onclick = () => {
-  if(!openAnimationTop.isRunning() || !openAnimationScreen.isRunning()) {
+  if(!openAnimationTop.isRunning()) {
   animationControls.playOpen()
     openBtn.classList.add("active")
     if(closeBtn.classList.contains("active")) {
@@ -141,7 +157,7 @@ openBtn.onclick = () => {
 
 }
 closeBtn.onclick = () => {
-  if(!openAnimationTop.isRunning() || !openAnimationScreen.isRunning()) {
+  if(!openAnimationTop.isRunning()) {
   animationControls.playClose()
     closeBtn.classList.add("active")
     if(openBtn.classList.contains("active")) {
@@ -150,13 +166,9 @@ closeBtn.onclick = () => {
   }
 }
 onBtn.onclick = () => {
-  // if(!openAnimationTop.isRunning() || !openAnimationScreen.isRunning()) {
-  animationControls.playOn()
-    // onBtn.classList.add("active")
-    // if(openBtn.classList.contains("active")) {
-    //   openBtn.classList.remove("active")
-    // }
-  // }
+  if(!onButtonAnimation.isRunning()) {
+    animationControls.playOn()
+  }
 }
 
 /**
@@ -234,6 +246,18 @@ const tick = () =>
     const elapsedTime = clock.getElapsedTime()
 		const deltaTime = elapsedTime - previousTime
 		previousTime = elapsedTime
+
+
+    // Battery light emissive intensity
+    if (batteryLightMaterial) {
+      batteryLightElapsed += deltaTime
+      const progress = Math.min(batteryLightElapsed / batteryLightDuration, 1)
+      batteryLightMaterial.emissiveIntensity = THREE.MathUtils.lerp(
+        batteryLightMaterial.emissiveIntensity,
+        batteryLightTargetIntensity,
+        progress
+      )
+    }
 
 		// Update mixer
 		if (mixer !== null) {
